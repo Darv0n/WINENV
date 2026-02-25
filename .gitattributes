@@ -1,0 +1,30 @@
+# Force LF line endings for all text files
+* text=auto eol=lf
+
+# Explicitly mark shell scripts (CRLF breaks hooks and bash scripts)
+*.sh text eol=lf
+*.bash text eol=lf
+.bashrc text eol=lf
+.bash_profile text eol=lf
+
+# PowerShell can handle either, but keep consistent
+*.ps1 text eol=lf
+*.psm1 text eol=lf
+*.psd1 text eol=lf
+
+# Config files
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+
+# Binary files — do not touch
+*.png binary
+*.jpg binary
+*.ico binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary

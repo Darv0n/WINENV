@@ -1,0 +1,45 @@
+# Backups created by deploy.ps1
+backups/*
+!backups/.gitkeep
+
+# Local overrides (never committed)
+*.local.*
+settings.local.json
+
+# OS
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Editor
+.vscode/.ropeproject
+*.swp
+*.swo
+*~
+
+# Claude session data
+.claude/projects/
+.claude/cache/
+.claude/downloads/
+.claude/debug/
+.claude/backups/
+.claude/todos/
+.claude/tasks/
+.claude/telemetry/
+.claude/shell-snapshots/
+.claude/file-history/
+.claude/paste-cache/
+.claude/plans/
+.claude/history.jsonl
+.claude/stats-cache.json
+.claude/.credentials.json
+.claude/settings.local.json
+.claude/plugins/
+
+# Node
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
