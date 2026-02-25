@@ -20,6 +20,9 @@ alias gb='git branch'
 # --- Navigation ---
 alias proj='cd /c/Users/doubl/projects'
 alias apps='cd /c/Users/doubl/projects/apps'
+
+# --- WINENV tools ---
+alias yolo='pwsh /c/Users/doubl/projects/apps/WINENV/scripts/yolo.ps1'
 alias ll='ls -la --color=auto'
 alias la='ls -A --color=auto'
 

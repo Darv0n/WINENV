@@ -72,8 +72,24 @@ WINENV/
   scripts/
     deploy.ps1        # Symlink deployment engine
     statusline.ps1    # Claude Code status line
+    yolo.ps1          # Toggle Claude Code YOLO mode
   templates/          # Starter configs for new repos
   docs/               # Architecture and design docs
   research/           # Original research documents
   backups/            # Auto-populated by deploy.ps1
 ```
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `pwsh scripts/deploy.ps1 [-DryRun]` | Deploy all configs via symlinks |
+| `pwsh bootstrap/verify.ps1` | Check all tools are installed |
+| `pwsh scripts/yolo.ps1` | Toggle Claude Code YOLO mode (auto-toggle) |
+| `pwsh scripts/yolo.ps1 -On / -Off` | Force YOLO on or off |
+| `pwsh scripts/yolo.ps1 -Status` | Show current mode |
+| `yolo` | Shell alias (PS7 and Git Bash) |
+
+**YOLO mode** sets `bypassPermissions` in `settings.local.json`, skipping per-tool
+approval prompts. PreToolUse hooks (`guard-destructive-bash.sh`) remain active as
+a safety net. The original settings are backed up to `.pre-yolo` and restored on toggle off.

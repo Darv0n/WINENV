@@ -26,6 +26,9 @@ function gb { git branch @args }
 function proj { Set-Location C:\Users\doubl\projects }
 function apps { Set-Location C:\Users\doubl\projects\apps }
 
+# --- WINENV tools ---
+function yolo { & pwsh "$env:USERPROFILE\projects\apps\WINENV\scripts\yolo.ps1" @args }
+
 # --- Zoxide ---
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {
     Invoke-Expression (& { (zoxide init powershell | Out-String) })
