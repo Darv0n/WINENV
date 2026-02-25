@@ -12,7 +12,20 @@
 [![Windows 11](https://img.shields.io/badge/Windows_11-0078D4?style=for-the-badge&logo=windows11&logoColor=white)](#)
 [![PowerShell 7](https://img.shields.io/badge/PowerShell_7-5391FE?style=for-the-badge&logo=powershell&logoColor=white)](#)
 [![Claude Code](https://img.shields.io/badge/Claude_Code-191919?style=for-the-badge&logo=anthropic&logoColor=white)](#)
-[![Tokyo Night](https://img.shields.io/badge/Tokyo_Night-1A1B26?style=for-the-badge&logoColor=white)](#)
+[![VS Code](https://img.shields.io/badge/VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)](#)
+
+<br>
+
+![bg](https://img.shields.io/badge/_%20-1A1B26?style=flat-square&logoColor=white)
+![fg](https://img.shields.io/badge/foreground-A9B1D6?style=flat-square&logoColor=white)
+![blue](https://img.shields.io/badge/blue-7AA2F7?style=flat-square&logoColor=white)
+![green](https://img.shields.io/badge/green-9ECE6A?style=flat-square&logoColor=white)
+![red](https://img.shields.io/badge/red-F7768E?style=flat-square&logoColor=white)
+![yellow](https://img.shields.io/badge/yellow-E0AF68?style=flat-square&logoColor=white)
+![purple](https://img.shields.io/badge/purple-BB9AF7?style=flat-square&logoColor=white)
+![cyan](https://img.shields.io/badge/cyan-7DCFFF?style=flat-square&logoColor=white)
+
+**Tokyo Night** &bull; **JetBrainsMono Nerd Font**
 
 </div>
 
@@ -37,14 +50,133 @@ pwsh bootstrap\verify.ps1                                        # confirm every
 
 ---
 
+## What It Looks Like
+
+> The terminal, prompt, status line, and mode indicators — all running on Tokyo Night with JetBrainsMono Nerd Font.
+
+### Terminal
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                                                          ─ □ ×      │
+│  ~/projects/WINENV  main >                                         │
+│                                                                      │
+│  > pwsh scripts/deploy.ps1                                           │
+│                                                                      │
+│  WINENV Deploy                                                       │
+│  ==================================================                  │
+│                                                                      │
+│  >> Shell configs                                                    │
+│     OK: ~/.bashrc -> WINENV/configs/git-bash/.bashrc                 │
+│     OK: ~/.bash_profile -> WINENV/configs/git-bash/.bash_profile     │
+│     OK: ~/.config/starship.toml -> WINENV/configs/starship/...       │
+│                                                                      │
+│  >> PowerShell 7 profile                                             │
+│     OK: ~/Documents/PowerShell/profile.ps1 -> WINENV/configs/...     │
+│                                                                      │
+│  >> Git config                                                       │
+│     SKIP: Git include already present                                │
+│                                                                      │
+│  >> Claude Code                                                      │
+│     OK: ~/.claude/settings.json -> WINENV/configs/claude/...         │
+│     OK: ~/.claude/hooks/guard-destructive-bash.sh -> WINENV/...      │
+│     OK: ~/.claude/rules/principles.md -> WINENV/configs/claude/...   │
+│                                                                      │
+│  ==================================================                  │
+│  Deployment complete. Restart terminal to pick up changes.           │
+│                                                                      │
+│  [main] | claude-opus-4-6 | $2.47 | 18.3k tok | 41% cache          │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+### Starship Prompt
+
+```
+~/projects/WINENV  main ?1 >
+│                    │    │  └── success (green) / error (red)
+│                    │    └──── modified files (yellow)
+│                    └───────── git branch (purple)
+└────────────────────────────── directory, truncated to 3 levels
+```
+
+Detects Python and Node.js when project files are present:
+
+```
+~/projects/my-api  feature/auth  v20.11.0 >
+```
+
+### Permission Mode Indicators
+
+```
+ NORMAL                                 ← green, default
+ YOLO (bypassPermissions)              ← red, hooks still active
+ SICKO (bypassPermissions + hooks off) ← magenta, you are the safety net
+```
+
+### Claude Code Status Line
+
+Live metrics at the bottom of every Claude session:
+
+```
+[main] | claude-opus-4-6 | $12.34 | 45.2k tok | 23% cache
+  │           │              │          │           └── cache hit rate
+  │           │              │          └────────────── token count
+  │           │              └───────────────────────── session cost
+  │           └──────────────────────────────────────── active model
+  └──────────────────────────────────────────────────── git branch
+```
+
+### Verify Output
+
+```
+ > pwsh bootstrap/verify.ps1
+
+ WINENV Verification
+ ==================================================
+
+   PASS: Git 2.47.1
+   PASS: Node.js v20.11.0
+   PASS: Python 3.12.4
+   PASS: PowerShell 7.4.6
+   PASS: Starship 1.21.1
+   PASS: Zoxide 0.9.6
+   PASS: VS Code 1.96.0
+   PASS: GitHub CLI 2.62.0
+   PASS: Claude Code 1.0.16
+   PASS: Winget v1.9.25180
+   PASS: JetBrainsMono Nerd Font
+
+ ==================================================
+ All checks passed.
+```
+
+---
+
 ## Architecture
 
 ```
- Layer 4  AI Agent     Claude Code settings, hooks, rules, MCP, status line
- Layer 3  Editor       VS Code settings, keybindings, terminal profiles
- Layer 2  Shell        PowerShell 7 + Git Bash, shared Starship prompt, zoxide
- Layer 1  Git          Managed gitconfig (aliases, rerere, push), global ignore/attributes
- Layer 0  Platform     Windows Terminal, winget DSC, JetBrainsMono Nerd Font
+ ┌─────────────────────────────────────────────────────────────────┐
+ │  Layer 4   AI Agent                                             │
+ │  ┌───────────────────────────────────────────────────────────┐  │
+ │  │  Claude Code settings ─ hooks ─ rules ─ MCP ─ statusline │  │
+ │  └───────────────────────────────────────────────────────────┘  │
+ │  Layer 3   Editor                                               │
+ │  ┌───────────────────────────────────────────────────────────┐  │
+ │  │  VS Code settings ─ keybindings ─ terminal profiles       │  │
+ │  └───────────────────────────────────────────────────────────┘  │
+ │  Layer 2   Shell                                                │
+ │  ┌───────────────────────────────────────────────────────────┐  │
+ │  │  PowerShell 7 ─ Git Bash ─ Starship prompt ─ Zoxide      │  │
+ │  └───────────────────────────────────────────────────────────┘  │
+ │  Layer 1   Git                                                  │
+ │  ┌───────────────────────────────────────────────────────────┐  │
+ │  │  gitconfig-winenv ─ aliases ─ rerere ─ push defaults      │  │
+ │  └───────────────────────────────────────────────────────────┘  │
+ │  Layer 0   Platform                                             │
+ │  ┌───────────────────────────────────────────────────────────┐  │
+ │  │  Windows Terminal ─ winget DSC ─ JetBrainsMono Nerd Font  │  │
+ │  └───────────────────────────────────────────────────────────┘  │
+ └─────────────────────────────────────────────────────────────────┘
 ```
 
 Each layer builds on the one below. Deploy handles all of them in one pass.
@@ -86,16 +218,20 @@ Zero-overhead observability. Always know what the agent is costing you.
 
 ### Destructive Command Guard
 
-A `PreToolUse` hook intercepts every Bash command Claude tries to run. Blocked patterns:
+A `PreToolUse` hook intercepts every Bash command Claude tries to run:
 
 ```
-rm -rf                    # recursive force delete
-git push --force          # history rewrite
-git reset --hard          # discard uncommitted work
-git clean -f              # nuke untracked files
-git branch -D             # force-delete branch
-git checkout .            # discard working tree
-DROP DATABASE / TABLE     # destructive SQL
+ ┌─ guard-destructive-bash.sh ───────────────────────────────────────┐
+ │                                                                    │
+ │  BLOCKED    rm -rf                  recursive force delete         │
+ │  BLOCKED    git push --force        history rewrite                │
+ │  BLOCKED    git reset --hard        discard uncommitted work       │
+ │  BLOCKED    git clean -f            nuke untracked files           │
+ │  BLOCKED    git branch -D           force-delete branch            │
+ │  BLOCKED    git checkout .          discard working tree           │
+ │  BLOCKED    DROP DATABASE/TABLE     destructive SQL                │
+ │                                                                    │
+ └────────────────────────────────────────────────────────────────────┘
 ```
 
 The hook fires **even in YOLO mode**. You can go fast without going off a cliff.
@@ -111,22 +247,48 @@ yolo -Off         # return to NORMAL from any level
 yolo -Status      # check current mode
 ```
 
+```
+  ┌────────────┐        ┌────────────┐        ┌────────────┐
+  │   NORMAL   │ yolo   │    YOLO    │-Sicko  │   SICKO    │
+  │            │───────>│            │───────>│            │
+  │  approve   │        │  bypass    │        │  bypass    │
+  │  prompts   │        │  perms     │        │  perms     │
+  │  hooks: ON │        │  hooks: ON │        │  hooks: OFF│
+  └────────────┘        └────────────┘        └────────────┘
+        ^                                           │
+        │              -Off from any level           │
+        └───────────────────────────────────────────┘
+```
+
 | Mode | Permissions | Hooks | When to use |
 |------|------------|-------|-------------|
-| **NORMAL** | Per-tool approval | Active | Default. Learning a codebase, reviewing agent output. |
-| **YOLO** | Bypass all | **Still active** | You trust the agent. Move fast. Guard has your back. |
-| **SICKO** | Bypass all | **Disabled** | Deep system work. Registry, drivers, infra. You are the safety net. |
+| ![normal](https://img.shields.io/badge/NORMAL-9ECE6A?style=flat-square&logoColor=white) | Per-tool approval | Active | Default. Learning a codebase, reviewing agent output. |
+| ![yolo](https://img.shields.io/badge/YOLO-F7768E?style=flat-square&logoColor=white) | Bypass all | **Still active** | You trust the agent. Move fast. Guard has your back. |
+| ![sicko](https://img.shields.io/badge/SICKO-BB9AF7?style=flat-square&logoColor=white) | Bypass all | **Disabled** | Deep system work. Registry, drivers, infra. You are the safety net. |
 
 <details>
-<summary><b>How it works</b></summary>
+<summary><b>How it works under the hood</b></summary>
 
 <br>
 
-Both modes manipulate `settings.local.json`, which overrides `settings.json` at the project level.
+Both modes manipulate `~/.claude/settings.local.json`, which overrides `settings.json` at the project level.
 
-**YOLO** writes `bypassPermissions` — hooks in `settings.json` still fire because the local override only covers permissions. `guard-destructive-bash.sh` remains your safety net.
+**YOLO** writes:
+```json
+{
+  "permissions": { "defaultMode": "bypassPermissions" }
+}
+```
+Hooks in `settings.json` still fire because the local override only covers permissions.
 
-**SICKO** writes `bypassPermissions` + `"hooks": {}` — the empty hooks object at the local level shadows the shared hooks entirely. The guard is sleeping. You are the operator.
+**SICKO** writes:
+```json
+{
+  "permissions": { "defaultMode": "bypassPermissions" },
+  "hooks": {}
+}
+```
+The empty `hooks` object at the local level shadows the shared hooks entirely. The guard is sleeping.
 
 Your original `settings.local.json` is backed up to `.pre-yolo` on first escalation and restored on `-Off`. Auto-toggle from any elevated mode returns straight to NORMAL.
 
@@ -163,14 +325,16 @@ Both shells share the same aliases, the same prompt, and the same navigation —
 ### Shared Aliases
 
 ```
-gs    git status              proj   cd ~/projects
-ga    git add                 apps   cd ~/projects/apps
-gc    git commit              yolo   toggle YOLO mode
-gp    git push
-gl    git log --oneline -20
-gd    git diff
-gco   git checkout
-gb    git branch
+ ┌─ Git ──────────────────────┐  ┌─ Navigation ──────────────┐
+ │  gs   git status           │  │  proj   cd ~/projects     │
+ │  ga   git add              │  │  apps   cd ~/projects/apps│
+ │  gc   git commit           │  │  z ..   zoxide jump       │
+ │  gp   git push             │  └───────────────────────────┘
+ │  gl   git log --oneline    │  ┌─ Tools ────────────────────┐
+ │  gd   git diff             │  │  yolo   permission toggle  │
+ │  gco  git checkout         │  │  ll     ls -la             │
+ │  gb   git branch           │  │  la     ls -A              │
+ └────────────────────────────┘  └────────────────────────────┘
 ```
 
 ### Starship Prompt
@@ -189,9 +353,15 @@ Smart directory jumping. `z projects` from anywhere. Learns from your `cd` histo
 
 ### PSReadLine (PowerShell)
 
-- **Up/Down arrows** — search history by prefix (type `git` then press Up)
-- **Tab** — cycle through completions (MenuComplete)
-- **Prediction** — inline suggestions from history
+```
+ ┌─ PSReadLine ────────────────────────────────────────────────┐
+ │                                                              │
+ │  Up/Down     search history by prefix (type "git" + Up)     │
+ │  Tab         cycle through completions (MenuComplete)        │
+ │  Prediction  inline suggestions from command history         │
+ │                                                              │
+ └──────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -202,15 +372,22 @@ Smart directory jumping. `z projects` from anywhere. Learns from your `cd` histo
 
 <br>
 
-- **Font:** JetBrainsMono Nerd Font, 13pt, ligatures on
-- **Theme:** Tokyo Night
-- **Format on save:** enabled (critical for AI-generated code)
-- **Auto-save:** on focus change
-- **Tab size:** 2 spaces (4 for Python)
-- **Line endings:** LF enforced
-- **Trim trailing whitespace** and insert final newline
-- **Minimap:** off
-- **Preview mode:** off (files open, not preview)
+```
+ ┌─ Editor ──────────────────────────────────────────────┐
+ │                                                        │
+ │  Font          JetBrainsMono Nerd Font, 13pt           │
+ │  Ligatures     enabled                                 │
+ │  Theme         Tokyo Night                             │
+ │  Tab size      2 spaces (4 for Python)                 │
+ │  Line endings  LF enforced                             │
+ │  Format        on save (critical for AI output)        │
+ │  Auto-save     on focus change                         │
+ │  Minimap       off                                     │
+ │  Preview       off (files open, not preview)           │
+ │  Trim          trailing whitespace + final newlines    │
+ │                                                        │
+ └────────────────────────────────────────────────────────┘
+```
 
 </details>
 
@@ -219,12 +396,16 @@ Smart directory jumping. `z projects` from anywhere. Learns from your `cd` histo
 
 <br>
 
-| Shortcut | Action |
-|----------|--------|
-| `Alt+;` | Toggle focus: editor ↔ terminal |
-| `Alt+J` / `Alt+K` | Previous / next tab |
-| `Alt+B` | Toggle sidebar |
-| `Alt+P` | Toggle panel |
+```
+ ┌─ Keybindings ─────────────────────────────────────────┐
+ │                                                        │
+ │  Alt + ;       toggle focus: editor <-> terminal       │
+ │  Alt + J / K   previous / next editor tab              │
+ │  Alt + B       toggle sidebar                          │
+ │  Alt + P       toggle panel                            │
+ │                                                        │
+ └────────────────────────────────────────────────────────┘
+```
 
 Designed to minimize mouse usage during AI-supervised coding sessions.
 
@@ -235,11 +416,19 @@ Designed to minimize mouse usage during AI-supervised coding sessions.
 
 <br>
 
-- **PowerShell 7** (default) — `pwsh.exe -NoLogo`
-- **Git Bash** — `bash.exe --login -i`
-- **Command Prompt** — available as fallback
-
-All start in `~/projects`. Same font. Same theme.
+```
+ ┌─ Terminal Profiles ───────────────────────────────────┐
+ │                                                        │
+ │  PowerShell 7   pwsh.exe -NoLogo          (default)   │
+ │  Git Bash       bash.exe --login -i                    │
+ │  Command Prompt cmd.exe                   (fallback)   │
+ │                                                        │
+ │  All start in ~/projects                               │
+ │  All use JetBrainsMono Nerd Font                       │
+ │  All use Tokyo Night color scheme                      │
+ │                                                        │
+ └────────────────────────────────────────────────────────┘
+```
 
 </details>
 
@@ -253,15 +442,19 @@ All start in `~/projects`. Same font. Same theme.
 <br>
 
 ```
-push.default          = current       # push current branch, not all
-push.autoSetupRemote  = true          # auto-track on first push
-pull.rebase           = true          # rebase over merge (linear history)
-fetch.prune           = true          # auto-delete stale remotes
-merge.conflictstyle   = diff3         # show original + current + incoming
-rerere.enabled        = true          # record & replay conflict resolutions
-diff.colorMoved       = default       # highlight moved code blocks
-core.autocrlf         = false         # LF enforced via .gitattributes, not conversion
-core.editor           = code --wait
+ ┌─ Git Behavior ────────────────────────────────────────────────┐
+ │                                                                │
+ │  push.default          current     push current branch only    │
+ │  push.autoSetupRemote  true        auto-track on first push    │
+ │  pull.rebase           true        linear history preferred     │
+ │  fetch.prune           true        auto-delete stale remotes   │
+ │  merge.conflictstyle   diff3       original + current + theirs │
+ │  rerere.enabled        true        record & replay resolutions │
+ │  diff.colorMoved       default     highlight moved code blocks │
+ │  core.autocrlf         false       LF via .gitattributes only  │
+ │  core.editor           code --wait                              │
+ │                                                                │
+ └────────────────────────────────────────────────────────────────┘
 ```
 
 </details>
@@ -272,15 +465,19 @@ core.editor           = code --wait
 <br>
 
 ```
-git st         status
-git co         checkout
-git br         branch
-git ci         commit
-git lg         log --oneline --graph --decorate -20
-git last       log -1 HEAD
-git unstage    reset HEAD --
-git amend      commit --amend --no-edit
-git wip        !git add -A && git commit -m 'WIP'
+ ┌─ Git Aliases ─────────────────────────────────────────────────┐
+ │                                                                │
+ │  git st        status                                          │
+ │  git co        checkout                                        │
+ │  git br        branch                                          │
+ │  git ci        commit                                          │
+ │  git lg        log --oneline --graph --decorate -20            │
+ │  git last      log -1 HEAD                                     │
+ │  git unstage   reset HEAD --                                   │
+ │  git amend     commit --amend --no-edit                        │
+ │  git wip       !git add -A && git commit -m 'WIP'             │
+ │                                                                │
+ └────────────────────────────────────────────────────────────────┘
 ```
 
 </details>
@@ -301,13 +498,17 @@ OS files, editor artifacts, Python/Node build outputs, environment files (`.env`
 Starting from a fresh Windows 11 machine with nothing but PowerShell 5.1 and winget:
 
 ```
- 1. powershell install.ps1     Installs PS7, Starship, Zoxide, JetBrainsMono NF
- 2. restart terminal            Pick up new PATH and fonts
- 3. pwsh deploy.ps1 -DryRun    Preview all symlinks and includes
- 4. pwsh deploy.ps1             Deploy everything
- 5. restart terminal            Load new profiles
- 6. pwsh verify.ps1             Confirm all tools present and versioned
- 7. code                        Done.
+ ┌─ Fresh Machine to Full Config ────────────────────────────────┐
+ │                                                                │
+ │  1. powershell install.ps1    PS7, Starship, Zoxide, Font     │
+ │  2. restart terminal          pick up new PATH + fonts         │
+ │  3. pwsh deploy.ps1 -DryRun  preview all symlinks             │
+ │  4. pwsh deploy.ps1           deploy everything                │
+ │  5. restart terminal          load new profiles                │
+ │  6. pwsh verify.ps1           confirm all tools versioned      │
+ │  7. code .                    done                             │
+ │                                                                │
+ └────────────────────────────────────────────────────────────────┘
 ```
 
 <details>
@@ -346,9 +547,13 @@ Each tool gets a PASS/FAIL with version. Exit code 1 if anything fails.
 New projects get sane defaults from `templates/repo/`:
 
 ```
-.gitattributes          LF enforcement + binary markers
-.claude/settings.json   Read-only Claude permissions (safe default)
-CLAUDE.md               Starter project context for Claude Code
+ ┌─ templates/repo/ ─────────────────────────────────────────────┐
+ │                                                                │
+ │  .gitattributes          LF enforcement + binary markers       │
+ │  .claude/settings.json   read-only Claude perms (safe default) │
+ │  CLAUDE.md               starter project context               │
+ │                                                                │
+ └────────────────────────────────────────────────────────────────┘
 ```
 
 Copy into any new repo. Customize from there.
@@ -384,6 +589,38 @@ Copy into any new repo. Customize from there.
 
 ---
 
+## Safety Model
+
+```
+  ┌──────────────────────────────────────────────────────────────────┐
+  │                        yolo.ps1 toggle                           │
+  │                    (settings.local.json)                          │
+  │                                                                  │
+  │     NORMAL              YOLO                SICKO                │
+  │  ┌──────────┐       ┌──────────┐        ┌──────────┐            │
+  │  │ approve  │ yolo  │ bypass   │ -Sicko │ bypass   │            │
+  │  │ prompts  │──────>│ perms    │───────>│ perms    │            │
+  │  │          │       │          │        │          │            │
+  │  │ hooks:ON │       │ hooks:ON │        │ hooks:OFF│            │
+  │  └──────────┘       └──────────┘        └──────────┘            │
+  │       ^                                      │                   │
+  │       │           -Off from any level         │                   │
+  │       └──────────────────────────────────────┘                   │
+  │                                                                  │
+  │  ┌───────────────────────────────────────┐                       │
+  │  │         PreToolUse hook fires         │  <- NORMAL + YOLO     │
+  │  │    guard-destructive-bash.sh active   │                       │
+  │  │    blocks: rm -rf, force push,        │     SICKO: hooks      │
+  │  │    reset --hard, DROP TABLE...        │     shadowed by {}    │
+  │  └───────────────────────────────────────┘                       │
+  │                                                                  │
+  │  In NORMAL and YOLO, the guard is structural.                    │
+  │  In SICKO, the guard is sleeping — you are the safety net.       │
+  └──────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Project Structure
 
 ```
@@ -404,7 +641,7 @@ WINENV/
   scripts/
     deploy.ps1 ............... Idempotent symlink deployment
     statusline.ps1 ........... Claude Code live metrics
-    yolo.ps1 ................. YOLO mode toggle
+    yolo.ps1 ................. Permission mode toggle
   templates/ ................. Starter configs for new repos
   docs/ ...................... Architecture and design philosophy
   research/ .................. Original requirements and research
@@ -413,66 +650,30 @@ WINENV/
 
 ---
 
-## Safety Model
-
-```
-                          +--------------------------+
-                          |    yolo.ps1 toggle       |
-                          |  (settings.local.json)   |
-                          +---+--------+--------+----+
-                              |        |        |
-                          NORMAL     YOLO     SICKO
-                          approve   bypass    bypass
-                          prompts   perms     perms
-                              |        |        |
-                              v        v        |
-                          +---+--------+---+    |
-                          | PreToolUse     |    |
-                          | hook fires     |    |  hooks: {}
-                          +-------+--------+    |  (shadowed)
-                                  |             |
-                          +-------v--------+    |
-                          | guard-destruct |    |
-                          | ive-bash.sh    |    |
-                          | blocks: rm -rf |    |
-                          | force push,    |    |
-                          | reset --hard,  |    |
-                          | DROP TABLE...  |    |
-                          +-------+--------+    |
-                                  |             |
-                                  v             v
-                          +-------+-------------+---+
-                          |    command executes      |
-                          +--------------------------+
-```
-
-In NORMAL and YOLO, the guard is structural. In SICKO, the guard is sleeping — you are the safety net.
-
----
-
 ## Theme
 
-**Tokyo Night** everywhere. Terminal. VS Code. Starship accents.
-**JetBrainsMono Nerd Font** everywhere. Ligatures. Icons. Consistent rendering.
+<div align="center">
 
-<details>
-<summary><b>Color palette</b></summary>
+### Tokyo Night
 
-<br>
+![bg](https://img.shields.io/badge/Background__%231A1B26-1A1B26?style=for-the-badge)
+![fg](https://img.shields.io/badge/Foreground__%23A9B1D6-A9B1D6?style=for-the-badge)
 
-| Color | Hex | Usage |
-|-------|-----|-------|
-| Background | `#1A1B26` | Terminal, editor |
-| Foreground | `#A9B1D6` | Default text |
-| Blue | `#7AA2F7` | Keywords, links |
-| Green | `#9ECE6A` | Strings, success |
-| Red | `#F7768E` | Errors, deletions |
-| Yellow | `#E0AF68` | Warnings, modifications |
-| Purple | `#BB9AF7` | Git branch, constants |
-| Selection | `#33467C` | Highlighted text |
-| Cursor | `#C0CAF5` | Cursor color |
+![blue](https://img.shields.io/badge/Blue__%237AA2F7-7AA2F7?style=for-the-badge&logoColor=white)
+![green](https://img.shields.io/badge/Green__%239ECE6A-9ECE6A?style=for-the-badge&logoColor=white)
+![red](https://img.shields.io/badge/Red__%23F7768E-F7768E?style=for-the-badge&logoColor=white)
+![yellow](https://img.shields.io/badge/Yellow__%23E0AF68-E0AF68?style=for-the-badge&logoColor=white)
 
-</details>
+![purple](https://img.shields.io/badge/Purple__%23BB9AF7-BB9AF7?style=for-the-badge&logoColor=white)
+![cyan](https://img.shields.io/badge/Cyan__%237DCFFF-7DCFFF?style=for-the-badge&logoColor=white)
+![selection](https://img.shields.io/badge/Selection__%2333467C-33467C?style=for-the-badge&logoColor=white)
+![cursor](https://img.shields.io/badge/Cursor__%23C0CAF5-C0CAF5?style=for-the-badge&logoColor=white)
+
+</div>
+
+Applied to: Windows Terminal, VS Code, Starship prompt accents.
+
+**JetBrainsMono Nerd Font** — ligatures, powerline icons, consistent rendering across every surface.
 
 ---
 
