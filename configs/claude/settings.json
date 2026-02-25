@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /c/Users/doubl/.claude/hooks/guard-destructive-bash.sh",
+            "timeout": 5000
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "plugin-dev@claude-plugins-official": true,
+    "polysyllogism@local-dev": true,
+    "feature-forge@local-dev": true,
+    "gameforge@local-dev": true
+  },
+  "autoUpdatesChannel": "latest",
+  "statusLine": {
+    "enabled": true
+  }
+}
