@@ -1,0 +1,50 @@
+# Starship prompt — minimal, single-line, agent-friendly
+# Tokyo Night palette for colors
+
+format = """$directory$git_branch$git_status$python$nodejs$character"""
+
+[character]
+success_symbol = "[>](bold green)"
+error_symbol = "[>](bold red)"
+
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+style = "bold blue"
+
+[git_branch]
+format = "[$symbol$branch]($style) "
+symbol = " "
+style = "purple"
+
+[git_status]
+format = '([$all_status$ahead_behind]($style) )'
+style = "yellow"
+
+[python]
+format = '[${symbol}${version}]($style) '
+symbol = " "
+style = "yellow"
+detect_files = ["pyproject.toml", "requirements.txt", ".python-version"]
+
+[nodejs]
+format = '[${symbol}${version}]($style) '
+symbol = " "
+style = "green"
+detect_files = ["package.json", ".nvmrc"]
+
+# Disable noisy modules
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[docker_context]
+disabled = true
+
+[package]
+disabled = true
+
+[cmd_duration]
+disabled = true
