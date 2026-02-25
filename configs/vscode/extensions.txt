@@ -1,0 +1,29 @@
+# WINENV Recommended VS Code Extensions
+# Reference only — not auto-installed
+# Install with: cat extensions.txt | xargs -L 1 code --install-extension
+
+# Theme
+enkia.tokyo-night
+
+# Language Support
+ms-python.python
+ms-python.black-formatter
+ms-python.vscode-pylance
+dbaeumer.vscode-eslint
+esbenp.prettier-vscode
+
+# Git
+eamodio.gitlens
+mhutchie.git-graph
+
+# AI
+anthropics.claude-code
+
+# Utilities
+editorconfig.editorconfig
+streetsidesoftware.code-spell-checker
+usernamehw.errorlens
+
+# Remote / Containers
+ms-vscode-remote.remote-wsl
+ms-azuretools.vscode-docker

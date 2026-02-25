@@ -1,0 +1,43 @@
+[
+  // --- Terminal focus toggle (Alt+;) ---
+  {
+    "key": "alt+;",
+    "command": "workbench.action.terminal.focus",
+    "when": "!terminalFocus"
+  },
+  {
+    "key": "alt+;",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "terminalFocus"
+  },
+
+  // --- Tab navigation (Alt+j/k) ---
+  {
+    "key": "alt+j",
+    "command": "workbench.action.previousEditor"
+  },
+  {
+    "key": "alt+k",
+    "command": "workbench.action.nextEditor"
+  },
+
+  // --- Fix Shift+Enter in terminal (send to terminal, don't submit) ---
+  {
+    "key": "shift+enter",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": { "text": "\n" },
+    "when": "terminalFocus && terminalProcessSupported"
+  },
+
+  // --- Quick sidebar toggle ---
+  {
+    "key": "alt+b",
+    "command": "workbench.action.toggleSidebarVisibility"
+  },
+
+  // --- Quick panel toggle ---
+  {
+    "key": "alt+p",
+    "command": "workbench.action.togglePanel"
+  }
+]
