@@ -100,28 +100,35 @@ DROP DATABASE / TABLE     # destructive SQL
 
 The hook fires **even in YOLO mode**. You can go fast without going off a cliff.
 
-### YOLO Mode
+### Permission Modes
 
-One command to toggle full permission bypass:
+Three escalation levels, one command:
 
 ```powershell
-yolo            # toggle on/off
-yolo -Status    # check current mode
+yolo              # toggle NORMAL <-> YOLO
+yolo -Sicko       # escalate to SICKO
+yolo -Off         # return to NORMAL from any level
+yolo -Status      # check current mode
 ```
+
+| Mode | Permissions | Hooks | When to use |
+|------|------------|-------|-------------|
+| **NORMAL** | Per-tool approval | Active | Default. Learning a codebase, reviewing agent output. |
+| **YOLO** | Bypass all | **Still active** | You trust the agent. Move fast. Guard has your back. |
+| **SICKO** | Bypass all | **Disabled** | Deep system work. Registry, drivers, infra. You are the safety net. |
 
 <details>
 <summary><b>How it works</b></summary>
 
 <br>
 
-YOLO mode writes `{"permissions": {"defaultMode": "bypassPermissions"}}` to `settings.local.json`, which overrides the normal per-tool approval flow. Your original settings are backed up to `.pre-yolo` and restored on toggle off.
+Both modes manipulate `settings.local.json`, which overrides `settings.json` at the project level.
 
-**The key insight:** `settings.local.json` (project-level) overrides permissions, but hooks in `settings.json` (shared-level) fire regardless. So `guard-destructive-bash.sh` remains your safety net even at full speed.
+**YOLO** writes `bypassPermissions` — hooks in `settings.json` still fire because the local override only covers permissions. `guard-destructive-bash.sh` remains your safety net.
 
-| State | Permissions | Hooks | Speed |
-|-------|------------|-------|-------|
-| Normal | Per-tool approval | Active | Deliberate |
-| YOLO | Bypass all | **Still active** | Fast |
+**SICKO** writes `bypassPermissions` + `"hooks": {}` — the empty hooks object at the local level shadows the shared hooks entirely. The guard is sleeping. You are the operator.
+
+Your original `settings.local.json` is backed up to `.pre-yolo` on first escalation and restored on `-Off`. Auto-toggle from any elevated mode returns straight to NORMAL.
 
 </details>
 
@@ -356,9 +363,10 @@ Copy into any new repo. Customize from there.
 | `pwsh scripts/deploy.ps1 -DryRun` | Preview without changes |
 | `pwsh bootstrap/install.ps1` | Install all tools from scratch |
 | `pwsh bootstrap/verify.ps1` | Validate all tools are present |
-| `yolo` | Toggle YOLO mode on/off |
+| `yolo` | Toggle NORMAL / YOLO |
+| `yolo -Sicko` | Escalate to SICKO (hooks disabled) |
+| `yolo -Off` | Return to NORMAL from any level |
 | `yolo -Status` | Show current permission mode |
-| `yolo -On` / `yolo -Off` | Force YOLO on or off |
 
 ---
 
@@ -409,31 +417,36 @@ WINENV/
 
 ```
                           +--------------------------+
-                          |     YOLO mode toggle     |
+                          |    yolo.ps1 toggle       |
                           |  (settings.local.json)   |
-                          +------------+-------------+
-                                       |
-                    +------------------+------------------+
-                    |                                     |
-              NORMAL MODE                           YOLO MODE
-           per-tool approval                    bypass permissions
-                    |                                     |
-                    +------------------+------------------+
-                                       |
-                          +------------v-------------+
-                          |   PreToolUse hook fires   |
-                          |      (ALWAYS active)      |
-                          +------------+-------------+
-                                       |
-                          +------------v-------------+
-                          | guard-destructive-bash.sh |
-                          |   blocks: rm -rf, force   |
-                          |   push, reset --hard,     |
-                          |   DROP TABLE, etc.         |
+                          +---+--------+--------+----+
+                              |        |        |
+                          NORMAL     YOLO     SICKO
+                          approve   bypass    bypass
+                          prompts   perms     perms
+                              |        |        |
+                              v        v        |
+                          +---+--------+---+    |
+                          | PreToolUse     |    |
+                          | hook fires     |    |  hooks: {}
+                          +-------+--------+    |  (shadowed)
+                                  |             |
+                          +-------v--------+    |
+                          | guard-destruct |    |
+                          | ive-bash.sh    |    |
+                          | blocks: rm -rf |    |
+                          | force push,    |    |
+                          | reset --hard,  |    |
+                          | DROP TABLE...  |    |
+                          +-------+--------+    |
+                                  |             |
+                                  v             v
+                          +-------+-------------+---+
+                          |    command executes      |
                           +--------------------------+
 ```
 
-Hooks fire regardless of permission mode. The guard is structural, not optional.
+In NORMAL and YOLO, the guard is structural. In SICKO, the guard is sleeping — you are the safety net.
 
 ---
 
