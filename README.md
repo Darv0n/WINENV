@@ -31,6 +31,8 @@ pwsh scripts\deploy.ps1                                          # 2. deploy con
 pwsh bootstrap\verify.ps1                                        # 3. verify
 ```
 
+**[Cheatsheet &rarr;](docs/cheatsheet.md)** &mdash; copy-paste combos for every workflow, basic to S-tier.
+
 ---
 
 ## Architecture
