@@ -1,0 +1,46 @@
+# WINENV Git Configuration
+# Included via [include] from ~/.gitconfig
+# Never manages identity (user.name, user.email) or LFS — those stay in ~/.gitconfig
+
+[core]
+    autocrlf = false
+    eol = lf
+    editor = code --wait
+    pager = less -FRX
+    longpaths = true
+
+[init]
+    defaultBranch = main
+
+[push]
+    autoSetupRemote = true
+    default = current
+
+[pull]
+    rebase = true
+
+[fetch]
+    prune = true
+
+[merge]
+    conflictstyle = diff3
+
+[rerere]
+    enabled = true
+
+[diff]
+    colorMoved = default
+
+[alias]
+    st = status
+    co = checkout
+    br = branch
+    ci = commit
+    lg = log --oneline --graph --decorate -20
+    last = log -1 HEAD
+    unstage = reset HEAD --
+    amend = commit --amend --no-edit
+    wip = !git add -A && git commit -m 'WIP'
+
+[credential]
+    helper = manager

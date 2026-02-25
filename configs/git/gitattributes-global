@@ -1,0 +1,6 @@
+# Global gitattributes — applied to all repos
+# Shell scripts must be LF (CRLF breaks execution)
+*.sh text eol=lf
+*.bash text eol=lf
+.bashrc text eol=lf
+.bash_profile text eol=lf
