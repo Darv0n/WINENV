@@ -1,0 +1,11 @@
+# Force LF line endings
+* text=auto eol=lf
+
+# Shell scripts must be LF
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.ico binary
