@@ -1,0 +1,34 @@
+# WINENV Winget DSC Configuration
+# Usage: winget configure bootstrap/winget.dsc.yaml
+# Installs: PowerShell 7, Starship, Zoxide
+# Note: JetBrainsMono Nerd Font is installed separately (not in winget)
+
+properties:
+  configurationVersion: 0.2.0
+  resources:
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: powershell
+      directives:
+        description: PowerShell 7
+        allowPrerelease: false
+      settings:
+        id: Microsoft.PowerShell
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: starship
+      directives:
+        description: Starship cross-shell prompt
+        allowPrerelease: false
+      settings:
+        id: Starship.Starship
+        source: winget
+
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      id: zoxide
+      directives:
+        description: Zoxide smarter cd
+        allowPrerelease: false
+      settings:
+        id: ajeetdsouza.zoxide
+        source: winget
