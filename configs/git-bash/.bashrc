@@ -28,7 +28,7 @@ alias ll='ls -la --color=auto'
 alias la='ls -A --color=auto'
 
 # --- Path ---
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/anaconda3:$HOME/anaconda3/Scripts:$HOME/.local/bin:$PATH"
 
 # --- Zoxide ---
 if command -v zoxide &> /dev/null; then
