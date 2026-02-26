@@ -1,0 +1,244 @@
+#!/usr/bin/env bash
+# new-project — Scaffold a new project with consistent defaults
+# Usage: new-project <name> [options]
+set -euo pipefail
+
+# --- Defaults ---
+LANG="none"
+DIR="apps"
+NO_GIT=false
+DRY_RUN=false
+AUTHOR="TrashWizard"
+YEAR=$(date +%Y)
+PROJECTS_ROOT="$HOME/projects"
+TEMPLATE_DIR="$HOME/projects/apps/WINENV/templates/repo"
+
+# --- Usage ---
+usage() {
+    cat <<'EOF'
+Usage: new-project <name> [options]
+
+Scaffold a new project with consistent defaults.
+
+Options:
+  -l, --lang LANG    python | node | none (default: none)
+  -d, --dir DIR      apps | experiments | sandbox (default: apps)
+  -n, --no-git       Skip git init
+  --dry-run          Preview only
+  -h, --help         Show this help
+EOF
+    exit 0
+}
+
+# --- Parse args ---
+NAME=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -l|--lang)
+            LANG="$2"
+            shift 2
+            ;;
+        -d|--dir)
+            DIR="$2"
+            shift 2
+            ;;
+        -n|--no-git)
+            NO_GIT=true
+            shift
+            ;;
+        --dry-run)
+            DRY_RUN=true
+            shift
+            ;;
+        -h|--help)
+            usage
+            ;;
+        -*)
+            echo "ERROR: Unknown option: $1" >&2
+            exit 1
+            ;;
+        *)
+            if [[ -z "$NAME" ]]; then
+                NAME="$1"
+            else
+                echo "ERROR: Unexpected argument: $1" >&2
+                exit 1
+            fi
+            shift
+            ;;
+    esac
+done
+
+# --- Validate name ---
+if [[ -z "$NAME" ]]; then
+    echo "ERROR: Project name required" >&2
+    echo "Usage: new-project <name> [options]" >&2
+    exit 1
+fi
+
+if [[ ! "$NAME" =~ ^[a-z][a-z0-9-]*$ ]]; then
+    echo "ERROR: Name must be lowercase, start with a letter, and contain only letters, numbers, hyphens" >&2
+    echo "  Got: $NAME" >&2
+    exit 1
+fi
+
+# --- Validate lang ---
+if [[ "$LANG" != "none" && "$LANG" != "python" && "$LANG" != "node" ]]; then
+    echo "ERROR: --lang must be python, node, or none (got: $LANG)" >&2
+    exit 1
+fi
+
+# --- Validate dir ---
+if [[ "$DIR" != "apps" && "$DIR" != "experiments" && "$DIR" != "sandbox" ]]; then
+    echo "ERROR: --dir must be apps, experiments, or sandbox (got: $DIR)" >&2
+    exit 1
+fi
+
+# --- Target path ---
+TARGET="$PROJECTS_ROOT/$DIR/$NAME"
+
+# --- Idempotency check ---
+if [[ -d "$TARGET" ]]; then
+    echo "EXISTS: $TARGET"
+    exit 0
+fi
+
+# --- Dry run ---
+if [[ "$DRY_RUN" == true ]]; then
+    echo "DRY RUN: $NAME"
+    echo "  target: $TARGET"
+    echo "  lang: $LANG"
+    echo "  git: $( [[ "$NO_GIT" == true ]] && echo "no" || echo "yes" )"
+    echo "  template files:"
+    echo "    .claude/settings.json"
+    echo "    .editorconfig"
+    echo "    .gitattributes"
+    echo "    .gitignore"
+    echo "    CLAUDE.md"
+    echo "    LICENSE"
+    echo "    README.md"
+    if [[ "$LANG" == "python" ]]; then
+        echo "    pyproject.toml"
+        echo "    src/$NAME/"
+        echo "    tests/"
+    elif [[ "$LANG" == "node" ]]; then
+        echo "    package.json"
+        echo "    tsconfig.json"
+        echo "    src/"
+    fi
+    exit 0
+fi
+
+# --- Verify template exists ---
+if [[ ! -d "$TEMPLATE_DIR" ]]; then
+    echo "ERROR: Template directory not found: $TEMPLATE_DIR" >&2
+    exit 1
+fi
+
+# --- Create project ---
+mkdir -p "$TARGET"
+
+# --- Copy template ---
+cp -r "$TEMPLATE_DIR/." "$TARGET/"
+
+# --- Substitute placeholders ---
+substitute() {
+    local file="$1"
+    if [[ -f "$file" ]]; then
+        sed -i "s/{{PROJECT_NAME}}/$NAME/g; s/{{YEAR}}/$YEAR/g; s/{{AUTHOR}}/$AUTHOR/g" "$file"
+    fi
+}
+
+substitute "$TARGET/CLAUDE.md"
+substitute "$TARGET/LICENSE"
+
+# --- Generate README ---
+cat > "$TARGET/README.md" <<EOF
+# $NAME
+EOF
+
+# --- Language: Python ---
+if [[ "$LANG" == "python" ]]; then
+    # Convert hyphens to underscores for Python package name
+    PKG_NAME="${NAME//-/_}"
+
+    cat > "$TARGET/pyproject.toml" <<EOF
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "$NAME"
+version = "0.1.0"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+EOF
+
+    mkdir -p "$TARGET/src/$PKG_NAME"
+    cat > "$TARGET/src/$PKG_NAME/__init__.py" <<EOF
+"""$NAME"""
+EOF
+
+    mkdir -p "$TARGET/tests"
+    touch "$TARGET/tests/__init__.py"
+fi
+
+# --- Language: Node ---
+if [[ "$LANG" == "node" ]]; then
+    cat > "$TARGET/package.json" <<EOF
+{
+  "name": "$NAME",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "test": "echo \"no tests configured\" && exit 0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "tsx": "^4.0.0"
+  }
+}
+EOF
+
+    cat > "$TARGET/tsconfig.json" <<EOF
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true
+  },
+  "include": ["src"]
+}
+EOF
+
+    mkdir -p "$TARGET/src"
+fi
+
+# --- Git init ---
+if [[ "$NO_GIT" == false ]]; then
+    git -C "$TARGET" init --quiet
+    git -C "$TARGET" add -A
+    git -C "$TARGET" commit --quiet -m "Initial scaffold via new-project"
+fi
+
+# --- Summary ---
+echo "CREATED: $TARGET"
+echo "  lang: $LANG"
+echo "  git: $( [[ "$NO_GIT" == true ]] && echo "no" || echo "yes" )"
