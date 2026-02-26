@@ -13,6 +13,10 @@
       }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "python ~/.claude/statusline.py"
+  },
   "enabledPlugins": {
     "plugin-dev@claude-plugins-official": true,
     "polysyllogism@local-dev": true,
@@ -20,7 +24,5 @@
     "gameforge@local-dev": true
   },
   "autoUpdatesChannel": "latest",
-  "statusLine": {
-    "enabled": true
-  }
+  "skipDangerousModePermissionPrompt": true
 }
