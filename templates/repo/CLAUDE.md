@@ -1,18 +1,22 @@
-# Project Name
+# {{PROJECT_NAME}}
 
-Brief description of what this project does.
-
-## Structure
-
-- `src/` — Source code
-- `tests/` — Test files
+<!-- Replace with a one-line description of what this project does. -->
 
 ## Commands
 
-- `npm test` — Run tests
-- `npm start` — Start the application
+<!-- List the commands Claude needs to build, test, and run this project. -->
+
+```bash
+# Build
+# Test
+# Run
+```
+
+## Architecture
+
+<!-- Describe the project structure and key components. -->
 
 ## Conventions
 
-- Use hyphenated names for files and folders
-- All text files use LF line endings
+- Hyphenated file and folder names
+- LF line endings (enforced by .gitattributes)

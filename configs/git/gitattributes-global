@@ -1,6 +1,48 @@
 # Global gitattributes — applied to all repos
-# Shell scripts must be LF (CRLF breaks execution)
+# LF everywhere on Windows. CRLF breaks shell scripts, hooks, and config parsing.
+
+# Shell
 *.sh text eol=lf
 *.bash text eol=lf
 .bashrc text eol=lf
 .bash_profile text eol=lf
+
+# Python
+*.py text eol=lf
+*.pyi text eol=lf
+
+# JavaScript / TypeScript
+*.js text eol=lf
+*.ts text eol=lf
+*.jsx text eol=lf
+*.tsx text eol=lf
+*.mjs text eol=lf
+*.mts text eol=lf
+
+# Config / Data
+*.json text eol=lf
+*.toml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.cfg text eol=lf
+*.ini text eol=lf
+
+# Web
+*.css text eol=lf
+*.html text eol=lf
+*.svg text eol=lf
+
+# Docs
+*.md text eol=lf
+*.txt text eol=lf
+*.rst text eol=lf
+
+# PowerShell
+*.ps1 text eol=lf
+*.psm1 text eol=lf
+*.psd1 text eol=lf
+
+# Misc
+Makefile text eol=lf
+Dockerfile text eol=lf
+*.env text eol=lf

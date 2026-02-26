@@ -1,11 +1,16 @@
-# Force LF line endings
+# Force LF line endings — CRLF breaks scripts and hooks on Windows
 * text=auto eol=lf
-
-# Shell scripts must be LF
-*.sh text eol=lf
-*.bash text eol=lf
 
 # Binary files
 *.png binary
 *.jpg binary
+*.jpeg binary
+*.gif binary
 *.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.zip binary
+*.tar.gz binary
+*.pdf binary

@@ -54,6 +54,18 @@ node_modules/
 .claude/settings.local.json
 .claude/plugins/
 
+# === Linting / Testing ===
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# === Databases ===
+*.db
+*.sqlite
+*.sqlite3
+
 # === Misc ===
 *.log
 *.tmp
