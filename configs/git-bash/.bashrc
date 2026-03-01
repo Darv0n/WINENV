@@ -27,6 +27,9 @@ alias yolo='pwsh /c/Users/doubl/projects/apps/WINENV/scripts/yolo.ps1'
 alias ll='ls -la --color=auto'
 alias la='ls -A --color=auto'
 
+# --- GitHub ---
+export GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token 2>/dev/null)"
+
 # --- Path ---
 export PATH="$HOME/anaconda3:$HOME/anaconda3/Scripts:$HOME/.local/bin:$PATH"
 
