@@ -1,4 +1,7 @@
 {
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -19,6 +22,8 @@
   },
   "enabledPlugins": {
     "plugin-dev@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
     "polysyllogism@local-dev": true,
     "feature-forge@local-dev": true,
     "gameforge@local-dev": true
