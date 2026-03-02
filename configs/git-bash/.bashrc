@@ -28,10 +28,16 @@ alias ll='ls -la --color=auto'
 alias la='ls -A --color=auto'
 
 # --- GitHub ---
-export GITHUB_PERSONAL_ACCESS_TOKEN="$(gh auth token 2>/dev/null)"
+# Token available on-demand via: gh auth token
+# Do NOT blanket-export tokens into the environment — every child process can read them.
 
 # --- Path ---
 export PATH="$HOME/anaconda3:$HOME/anaconda3/Scripts:$HOME/.local/bin:$PATH"
+
+# --- Deduplicate PATH ---
+PATH="$(printf '%s' "$PATH" | awk -v RS=: -v ORS=: '!seen[$0]++')"
+PATH="${PATH%:}"
+export PATH
 
 # --- Zoxide ---
 if command -v zoxide &> /dev/null; then

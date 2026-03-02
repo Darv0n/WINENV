@@ -8,6 +8,8 @@
     editor = code --wait
     pager = less -FRX
     longpaths = true
+    excludesFile = C:/Users/doubl/projects/apps/WINENV/configs/git/gitignore-global
+    attributesFile = C:/Users/doubl/projects/apps/WINENV/configs/git/gitattributes-global
 
 [init]
     defaultBranch = main
@@ -41,6 +43,15 @@
     unstage = reset HEAD --
     amend = commit --amend --no-edit
     wip = !git add -A && git commit -m 'WIP'
+
+[commit]
+    gpgsign = true
+
+[tag]
+    gpgsign = true
+
+[gpg]
+    program = gpg
 
 [credential]
     helper = manager
