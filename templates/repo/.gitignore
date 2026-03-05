@@ -1,1 +1,42 @@
-# Project-specific ignores (global gitignore handles OS, editor, language defaults)
+# Dependencies
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.p8
+*.pem
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Test & coverage
+coverage/
+.nyc_output/
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+
+# Runtime
+*.pid
+*.seed

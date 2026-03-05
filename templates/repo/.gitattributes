@@ -1,16 +1,32 @@
 # Force LF line endings — CRLF breaks scripts and hooks on Windows
 * text=auto eol=lf
 
-# Binary files
+# Binary files — images
 *.png binary
 *.jpg binary
 *.jpeg binary
 *.gif binary
 *.ico binary
+*.webp binary
+*.svg binary
+
+# Binary files — fonts
 *.woff binary
 *.woff2 binary
 *.ttf binary
 *.eot binary
+*.otf binary
+
+# Binary files — archives & data
 *.zip binary
 *.tar.gz binary
+*.gz binary
 *.pdf binary
+*.db binary
+*.sqlite binary
+*.se1 binary
+
+# Binary files — certificates & keys
+*.p8 binary
+*.p12 binary
+*.pem binary

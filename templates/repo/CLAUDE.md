@@ -1,20 +1,30 @@
 # {{PROJECT_NAME}}
 
-<!-- Replace with a one-line description of what this project does. -->
+<!-- One-line description -->
 
 ## Commands
-
-<!-- List the commands Claude needs to build, test, and run this project. -->
 
 ```bash
 # Build
 # Test
+# Lint
 # Run
 ```
 
 ## Architecture
 
-<!-- Describe the project structure and key components. -->
+<!-- Dependency flow diagram -->
+<!-- Key components and their roles -->
+
+## Load-Bearing Decisions
+
+<!-- Decisions that shouldn't be changed without understanding why -->
+| Decision | Rationale |
+|----------|-----------|
+
+## Configuration
+
+<!-- Environment variables, config files, what needs to be set -->
 
 ## Conventions
 
