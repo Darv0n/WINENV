@@ -169,6 +169,7 @@ Deploy-Symlink "claude\settings.json" (Join-Path $claudeDir 'settings.json')
 Deploy-Symlink "claude\CLAUDE.md" (Join-Path $claudeDir 'CLAUDE.md')
 Deploy-Symlink "claude\hooks\guard-destructive-bash.sh" (Join-Path $claudeDir 'hooks\guard-destructive-bash.sh')
 Deploy-Symlink "claude\rules\principles.md" (Join-Path $claudeDir 'rules\principles.md')
+Deploy-Symlink "claude\statusline.py" (Join-Path $claudeDir 'statusline.py')
 
 # --- Windows Terminal ---
 Write-Step "Windows Terminal"
