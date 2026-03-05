@@ -47,6 +47,19 @@ if command -v zoxide &> /dev/null; then
     eval "$(zoxide init bash)"
 fi
 
+# --- Claude Code launcher (-siko -> --dangerously-skip-permissions) ---
+claude() {
+    local args=()
+    for arg in "$@"; do
+        if [[ "$arg" == "-siko" ]]; then
+            args+=("--dangerously-skip-permissions")
+        else
+            args+=("$arg")
+        fi
+    done
+    command claude "${args[@]}"
+}
+
 # --- Starship prompt (must be last) ---
 if command -v starship &> /dev/null; then
     eval "$(starship init bash)"
