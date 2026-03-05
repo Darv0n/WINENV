@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  lint:
+    name: CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install tools
+        run: pip install ruff bandit
+
+      - name: Ruff lint
+        run: ruff check . --output-format=github --exclude .venv,venv,dist,build
+
+      - name: Syntax check
+        run: |
+          find . -name "*.py" \
+            -not -path "./.venv/*" \
+            -not -path "./venv/*" \
+            -not -path "./dist/*" \
+            -not -path "./build/*" \
+            | xargs -I{} python -m py_compile {}
+          echo "Syntax OK"
+
+      - name: Bandit security scan
+        run: |
+          if [ -d "src" ]; then
+            bandit -r src/ -ll --quiet
+          else
+            bandit -r . -ll --quiet --exclude ./.venv,./venv,./dist,./build
+          fi

@@ -1,0 +1,275 @@
+#!/usr/bin/env bash
+# =============================================================================
+# repo-setup.sh — Universal GitHub repo bootstrap
+# Darv0n workspace standard. Run once on any new or existing repo.
+#
+# Usage:
+#   bash setup.sh --repo Darv0n/my-project --lang python --desc "What it does" \
+#                 --topics "python,fastapi,api" [--public] [--no-push]
+#
+# What it does:
+#   1. Edits repo: description, topics, visibility
+#   2. Copies template files into the target repo (.coderabbit.yaml, CI, PR/issue templates)
+#   3. Creates standard + language labels on GitHub
+#   4. Sets branch protection (PRs required, CI must pass)
+#   5. Commits + pushes the template files
+#   6. Prints CodeRabbit install reminder
+#
+# Prerequisites: gh CLI authed, git, target repo already created on GitHub
+# =============================================================================
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# ---------------------------------------------------------------------------
+# Defaults
+# ---------------------------------------------------------------------------
+REPO=""
+LANG="python"
+DESC=""
+TOPICS=""
+VISIBILITY="private"
+PUSH=true
+DRY_RUN=false
+
+# ---------------------------------------------------------------------------
+# Args
+# ---------------------------------------------------------------------------
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --repo)     REPO="$2";      shift 2 ;;
+    --lang)     LANG="$2";      shift 2 ;;
+    --desc)     DESC="$2";      shift 2 ;;
+    --topics)   TOPICS="$2";    shift 2 ;;
+    --public)   VISIBILITY="public"; shift ;;
+    --no-push)  PUSH=false;     shift ;;
+    --dry-run)  DRY_RUN=true;   shift ;;
+    *) echo "Unknown arg: $1"; exit 1 ;;
+  esac
+done
+
+if [[ -z "$REPO" ]]; then
+  echo "ERROR: --repo required (e.g. Darv0n/my-project)"
+  exit 1
+fi
+
+REPO_NAME="${REPO#*/}"
+TEMPLATE_DIR="$HOME/projects/apps/WINENV/templates/github/$LANG"
+
+if [[ ! -d "$TEMPLATE_DIR" ]]; then
+  echo "ERROR: No template for lang '$LANG'. Available: $(ls $HOME/projects/apps/WINENV/templates/github/)"
+  exit 1
+fi
+
+echo ""
+echo "=== repo-setup: $REPO ==="
+echo "  lang:       $LANG"
+echo "  visibility: $VISIBILITY"
+echo "  desc:       ${DESC:-'(not set)'}"
+echo "  topics:     ${TOPICS:-'(not set)'}"
+echo "  dry-run:    $DRY_RUN"
+echo ""
+
+# ---------------------------------------------------------------------------
+# Find target repo local path — must be run from within the repo OR
+# REPO_PATH env var set explicitly
+# ---------------------------------------------------------------------------
+if [[ -n "${REPO_PATH:-}" ]]; then
+  TARGET="$REPO_PATH"
+elif git -C "$(pwd)" rev-parse --show-toplevel &>/dev/null; then
+  TARGET="$(git -C "$(pwd)" rev-parse --show-toplevel)"
+else
+  echo "ERROR: Run from inside the target repo, or set REPO_PATH=/path/to/repo"
+  exit 1
+fi
+echo "Target repo path: $TARGET"
+
+# ---------------------------------------------------------------------------
+# Step 1: GitHub repo metadata
+# ---------------------------------------------------------------------------
+echo ""
+echo "[1/5] Updating GitHub repo metadata..."
+
+EDIT_ARGS=(--repo "$REPO")
+[[ -n "$DESC" ]]       && EDIT_ARGS+=(--description "$DESC")
+[[ "$VISIBILITY" == "public" ]]  && EDIT_ARGS+=(--visibility public)
+[[ "$VISIBILITY" == "private" ]] && EDIT_ARGS+=(--visibility private)
+
+if [[ "$DRY_RUN" == false ]]; then
+  gh repo edit "${EDIT_ARGS[@]}" 2>/dev/null || echo "  (repo edit skipped — check gh auth)"
+fi
+
+# Topics (gh repo edit --add-topic one at a time)
+if [[ -n "$TOPICS" ]]; then
+  IFS=',' read -ra TOPIC_LIST <<< "$TOPICS"
+  for topic in "${TOPIC_LIST[@]}"; do
+    topic=$(echo "$topic" | xargs)  # trim whitespace
+    [[ -z "$topic" ]] && continue
+    if [[ "$DRY_RUN" == false ]]; then
+      gh repo edit "$REPO" --add-topic "$topic" 2>/dev/null || true
+    fi
+    echo "  + topic: $topic"
+  done
+fi
+echo "  done."
+
+# ---------------------------------------------------------------------------
+# Step 2: Copy template files into repo
+# ---------------------------------------------------------------------------
+echo ""
+echo "[2/5] Copying template files..."
+
+copy_template() {
+  local src="$1"
+  local dst="$TARGET/$2"
+  if [[ -f "$dst" ]]; then
+    echo "  SKIP (exists): $2"
+    return
+  fi
+  mkdir -p "$(dirname "$dst")"
+  if [[ "$DRY_RUN" == false ]]; then
+    cp "$src" "$dst"
+  fi
+  echo "  + $2"
+}
+
+# .coderabbit.yaml
+copy_template "$TEMPLATE_DIR/.coderabbit.yaml" ".coderabbit.yaml"
+
+# .github files
+for f in $(find "$TEMPLATE_DIR/.github" -type f); do
+  rel="${f#$TEMPLATE_DIR/}"
+  copy_template "$f" "$rel"
+done
+
+echo "  done."
+
+# ---------------------------------------------------------------------------
+# Step 3: Create labels
+# ---------------------------------------------------------------------------
+echo ""
+echo "[3/5] Creating labels..."
+
+create_label() {
+  local name="$1" color="$2" desc="$3"
+  if [[ "$DRY_RUN" == false ]]; then
+    gh label create "$name" --repo "$REPO" --color "$color" --description "$desc" 2>/dev/null \
+      && echo "  + $name" || echo "  ~ $name (exists)"
+  else
+    echo "  [dry] + $name"
+  fi
+}
+
+# Universal labels
+create_label "bug"            "d73a4a" "Something is broken"
+create_label "enhancement"   "a2eeef" "New feature or improvement"
+create_label "documentation" "cfd3d7" "Documentation only"
+create_label "breaking-change" "d93f0b" "Changes public contracts or output schema"
+create_label "perf"          "c5def5" "Performance improvement"
+create_label "security"      "e4e669" "Security fix or concern"
+create_label "dependencies"  "0075ca" "Dependency updates"
+create_label "wontfix"       "ffffff" "Intentional — not a bug"
+create_label "needs-review"  "fbca04" "Ready for review"
+create_label "blocked"       "b60205" "Blocked by another issue or PR"
+
+# Language-specific labels
+if [[ "$LANG" == "python" ]]; then
+  create_label "typing"  "bfd4f2" "Type annotation improvements"
+fi
+
+echo "  done."
+
+# ---------------------------------------------------------------------------
+# Step 4: Branch protection
+# ---------------------------------------------------------------------------
+echo ""
+echo "[4/5] Setting branch protection on main..."
+
+PROTECTION_JSON=$(cat << 'ENDJSON'
+{
+  "required_status_checks": {
+    "strict": true,
+    "contexts": ["CI"]
+  },
+  "enforce_admins": false,
+  "required_pull_request_reviews": {
+    "required_approving_review_count": 0,
+    "dismiss_stale_reviews": false
+  },
+  "restrictions": null,
+  "allow_force_pushes": false,
+  "allow_deletions": false
+}
+ENDJSON
+)
+
+if [[ "$DRY_RUN" == false ]]; then
+  echo "$PROTECTION_JSON" | gh api "repos/$REPO/branches/main/protection" \
+    --method PUT --input - > /dev/null 2>&1 \
+    && echo "  done." || echo "  WARNING: branch protection failed — check repo exists and has commits"
+else
+  echo "  [dry] would set branch protection"
+fi
+
+# ---------------------------------------------------------------------------
+# Step 5: Commit + push
+# ---------------------------------------------------------------------------
+echo ""
+echo "[5/5] Committing template files..."
+
+cd "$TARGET"
+
+# Only add files that exist and are untracked/modified
+FILES_TO_ADD=()
+for f in .coderabbit.yaml .github/workflows/ci.yml .github/pull_request_template.md \
+          .github/ISSUE_TEMPLATE/bug.md .github/ISSUE_TEMPLATE/feature.md; do
+  [[ -f "$TARGET/$f" ]] && FILES_TO_ADD+=("$f")
+done
+
+if [[ ${#FILES_TO_ADD[@]} -gt 0 ]]; then
+  if [[ "$DRY_RUN" == false ]]; then
+    git add "${FILES_TO_ADD[@]}"
+    # Only commit if there are staged changes
+    if ! git diff --cached --quiet; then
+      git commit -m "chore: repo bootstrap — CI, CodeRabbit, branch protection, labels
+
+Auto-generated by scripts/repo-setup/setup.sh.
+Lang: $LANG | Visibility: $VISIBILITY
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>"
+      if [[ "$PUSH" == true ]]; then
+        git push origin main
+        echo "  pushed."
+      else
+        echo "  committed (--no-push set, skipping push)"
+      fi
+    else
+      echo "  nothing new to commit."
+    fi
+  else
+    echo "  [dry] would commit: ${FILES_TO_ADD[*]}"
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# Done
+# ---------------------------------------------------------------------------
+echo ""
+echo "=== DONE ==="
+echo ""
+echo "  Repo:     https://github.com/$REPO"
+echo "  PRs:      required before merge to main"
+echo "  CI:       ruff + syntax + bandit on every PR"
+echo "  Rabbit:   reviews every PR automatically"
+echo ""
+echo "  MANUAL STEP REMAINING:"
+echo "  Install CodeRabbit GitHub App if not already done:"
+echo "  -> github.com/settings/installations -> CodeRabbit -> add $REPO_NAME"
+echo ""
+echo "  Workflow going forward:"
+echo "  git checkout -b feat/your-feature"
+echo "  # do work"
+echo "  gh pr create --title 'feat: ...' --body '...'"
+echo "  # CodeRabbit reviews, CI runs, merge when clean"
+echo ""

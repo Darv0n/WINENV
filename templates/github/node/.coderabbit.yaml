@@ -1,0 +1,47 @@
+language: "en-US"
+tone_instructions: "Be direct and precise. No filler. Flag real issues only."
+
+reviews:
+  profile: assertive
+  high_level_summary: true
+  auto_review:
+    enabled: true
+    drafts: false
+    auto_incremental_review: true
+
+  path_filters:
+    - "!node_modules/**"
+    - "!dist/**"
+    - "!build/**"
+    - "!.next/**"
+    - "!coverage/**"
+    - "!*.min.js"
+
+  path_instructions:
+    - path: "**/*.ts"
+      instructions: |
+        - No `any` types without explicit justification comment.
+        - No unhandled promise rejections.
+        - No hardcoded credentials or API keys.
+    - path: "**/*.tsx"
+      instructions: |
+        - No inline styles for anything that should be a class.
+        - Keys in lists must be stable IDs, not array indices.
+
+  tools:
+    eslint:
+      enabled: true
+    biome:
+      enabled: false
+
+knowledge_base:
+  web_search:
+    enabled: true
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "CLAUDE.md"
+      - ".coderabbit.yaml"
+
+chat:
+  auto_reply: true

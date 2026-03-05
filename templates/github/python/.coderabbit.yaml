@@ -1,0 +1,62 @@
+language: "en-US"
+tone_instructions: "Be direct and precise. No filler. Flag real issues only — don't nitpick style. When something is structurally correct by design, say so and move on."
+
+reviews:
+  profile: assertive
+  high_level_summary: true
+  collapse_walkthrough: false
+  auto_review:
+    enabled: true
+    drafts: false
+    auto_incremental_review: true
+
+  path_filters:
+    - "!**/__pycache__/**"
+    - "!*.pyc"
+    - "!*.pyo"
+    - "!.venv/**"
+    - "!venv/**"
+    - "!dist/**"
+    - "!build/**"
+    - "!*.egg-info/**"
+    - "!output/**"
+    - "!*.npy"
+    - "!*.npz"
+    - "!*.db"
+    - "!*.sqlite"
+
+  path_instructions:
+    - path: "**/*.py"
+      instructions: |
+        Python standards for this codebase:
+        - No hardcoded paths, credentials, or API keys anywhere in source.
+        - New file I/O operations must handle encoding explicitly (encoding="utf-8").
+        - No silent exception swallowing — log at WARNING minimum before continuing.
+        - Idempotent operations: re-running must not corrupt existing state.
+        - Graceful degradation for optional features: log at INFO + return safe default.
+
+    - path: "tests/**"
+      instructions: |
+        Tests must be deterministic (no random seeds without fixture control).
+        Each test should test one thing. No broad try/except in test bodies.
+
+  tools:
+    ruff:
+      enabled: true
+    mypy:
+      enabled: false
+    bandit:
+      enabled: true
+
+knowledge_base:
+  web_search:
+    enabled: true
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "CLAUDE.md"
+      - ".coderabbit.yaml"
+      - "README.md"
+
+chat:
+  auto_reply: true
