@@ -28,6 +28,10 @@ function apps { Set-Location C:\Users\doubl\projects\apps }
 
 # --- WINENV tools ---
 function yolo { & pwsh "$env:USERPROFILE\projects\apps\WINENV\scripts\yolo.ps1" @args }
+function yolo-status { & pwsh "$env:USERPROFILE\projects\apps\WINENV\scripts\yolo.ps1" -Status }
+function github-setup { bash "$env:USERPROFILE\projects\apps\WINENV\scripts\github-setup" @args }
+# CodeRabbit via WSL — isolates Windows PATH leakage
+function cr { wsl env PATH=/home/doubl/.local/bin:/usr/local/bin:/usr/bin:/bin coderabbit review --plain -t uncommitted }
 
 # --- Zoxide ---
 if (Get-Command zoxide -ErrorAction SilentlyContinue) {

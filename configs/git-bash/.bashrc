@@ -23,7 +23,10 @@ alias apps='cd /c/Users/doubl/projects/apps'
 
 # --- WINENV tools ---
 alias new-project='/c/Users/doubl/projects/apps/WINENV/scripts/new-project'
+alias github-setup='/c/Users/doubl/projects/apps/WINENV/scripts/github-setup'
 alias yolo='pwsh /c/Users/doubl/projects/apps/WINENV/scripts/yolo.ps1'
+alias yolo-status='pwsh /c/Users/doubl/projects/apps/WINENV/scripts/yolo.ps1 -Status'
+alias cr='PATH=/home/doubl/.local/bin:/usr/local/bin:/usr/bin:/bin wsl coderabbit review --plain -t uncommitted'
 alias ll='ls -la --color=auto'
 alias la='ls -A --color=auto'
 

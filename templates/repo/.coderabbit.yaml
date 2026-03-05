@@ -1,0 +1,52 @@
+language: "en-US"
+tone_instructions: "Be direct and actionable. Flag blocking issues prominently. Suggestions are advisory."
+
+reviews:
+  profile: "assertive"
+  request_changes_workflow: false
+  high_level_summary: true
+  sequence_diagrams: true
+  poem: false
+
+  path_filters:
+    - "!**/*.lock"
+    - "!**/node_modules/**"
+    - "!**/dist/**"
+    - "!**/build/**"
+    - "!**/coverage/**"
+    - "!**/__pycache__/**"
+
+  # Uncomment and customize per project:
+  # path_instructions:
+  #   - path: "src/core/**"
+  #     instructions: |
+  #       Critical zone. Flag any changes that break the public API contract.
+  #   - path: "**/*.test.*"
+  #     instructions: |
+  #       Mock data allowed here. Check for meaningful assertions.
+  #   - path: "prisma/**"
+  #     instructions: |
+  #       Check migration safety and backward compatibility.
+
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+    drafts: false
+    ignore_title_keywords:
+      - "[skip-review]"
+      - "WIP"
+
+  tools:
+    eslint:
+      enabled: true
+    biome:
+      enabled: true
+    gitleaks:
+      enabled: true
+    ruff:
+      enabled: true
+    shellcheck:
+      enabled: true
+
+chat:
+  auto_reply: true
