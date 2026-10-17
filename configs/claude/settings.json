@@ -2,15 +2,56 @@
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
-  "model": "claude-sonnet-4-6",
+  "model": "fable[1m]",
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/doubl/anaconda3/python.exe C:/Users/doubl/.claude/hooks/prisma-session-start.py",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/doubl/anaconda3/python.exe C:/Users/doubl/.claude/hooks/prisma-pre-compact.py",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/doubl/anaconda3/python.exe C:/Users/doubl/.claude/hooks/prisma-stop-check.py",
+            "timeout": 10000
+          },
+          {
+            "type": "command",
+            "command": "C:/Users/doubl/anaconda3/python.exe C:/Users/doubl/.claude/hooks/session-archive.py",
+            "timeout": 15000
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "bash /c/Users/doubl/.claude/hooks/guard-destructive-bash.sh",
+            "command": "C:/Users/doubl/anaconda3/python.exe C:/Users/doubl/.claude/hooks/guard-destructive.py",
             "timeout": 5000
           }
         ]
@@ -19,7 +60,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "python ~/.claude/statusline.py"
+    "command": "/c/Users/doubl/anaconda3/python.exe ~/.claude/statusline.py"
   },
   "enabledPlugins": {
     "plugin-dev@claude-plugins-official": true,
@@ -28,8 +69,13 @@
     "polysyllogism@local-dev": true,
     "feature-forge@local-dev": true,
     "gameforge@local-dev": true,
-    "coderabbit@claude-plugins-official": true
+    "coderabbit@claude-plugins-official": true,
+    "sentry@claude-plugins-official": true
   },
+  "effortLevel": "high",
   "autoUpdatesChannel": "latest",
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark-daltonized",
+  "remoteControlAtStartup": false,
+  "agentPushNotifEnabled": true
 }
