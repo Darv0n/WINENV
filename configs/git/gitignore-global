@@ -1,3 +1,8 @@
+# Machine-only patterns. Anything a collaborator's clone also needs to ignore
+# (build output, dependencies, caches, databases) belongs in that repo's own
+# .gitignore, where it is visible. A global dist/ or build/ silently hides files
+# a repo tracks or should track.
+
 # === OS ===
 .DS_Store
 Thumbs.db
@@ -13,22 +18,7 @@ $RECYCLE.BIN/
 *.sublime-project
 *.sublime-workspace
 
-# === Python ===
-__pycache__/
-*.pyc
-*.pyo
-.venv/
-venv/
-*.egg-info/
-dist/
-build/
-
-# === Node ===
-node_modules/
-.npm/
-*.tsbuildinfo
-
-# === Environment ===
+# === Secrets (safety net; repos should still ignore their own) ===
 .env
 .env.local
 .env.*.local
@@ -54,21 +44,6 @@ node_modules/
 .claude/settings.local.json
 .claude/plugins/
 
-# === Linting / Testing ===
-.ruff_cache/
-.mypy_cache/
-.pytest_cache/
-.coverage
-htmlcov/
-
-# === Databases ===
-*.db
-*.sqlite
-*.sqlite3
-
-# === Misc ===
+# === Scratch ===
 *.log
 *.tmp
-.cache/
-coverage/
-.nyc_output/

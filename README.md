@@ -313,7 +313,7 @@ All start in `~/projects`. Same font. Same theme.
 
 <br>
 
-OS files, editor artifacts, Python/Node build outputs, env files (`.env`, `*.pem`, `*.key`), Claude Code ephemeral state, common build dirs. [Full list &rarr;](configs/git/gitignore-global)
+Machine-only patterns: OS files, editor artifacts, Claude Code ephemeral state, logs and temp files, plus env files (`.env`, `*.pem`, `*.key`) as a safety net. Build output, dependencies, caches and databases belong in each repo's own `.gitignore`, where a collaborator's clone sees them too. [Full list &rarr;](configs/git/gitignore-global)
 
 </details>
 

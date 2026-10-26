@@ -17,7 +17,7 @@ Layer 2: Shell
 
 Layer 1: Git Safety
   gitconfig-winenv (aliases, rerere, push behavior)
-  gitignore-global (OS/editor/runtime ignores)
+  gitignore-global (machine-only: OS/editor/Claude/scratch, secrets net)
   gitattributes-global (LF enforcement for .sh)
 
 Layer 0: Platform
