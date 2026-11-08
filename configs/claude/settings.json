@@ -6,12 +6,22 @@
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "*",
+        "matcher": "startup|resume|clear",
         "hooks": [
           {
             "type": "command",
             "command": "C:/Users/doubl/anaconda3/python.exe C:/Users/doubl/.claude/hooks/prisma-session-start.py",
-            "timeout": 10000
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:/Users/doubl/anaconda3/python.exe C:/Users/doubl/.claude/hooks/ferry.py land",
+            "timeout": 30
           }
         ]
       }
@@ -22,8 +32,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:/Users/doubl/anaconda3/python.exe C:/Users/doubl/.claude/hooks/prisma-pre-compact.py",
-            "timeout": 10000
+            "command": "C:/Users/doubl/anaconda3/python.exe C:/Users/doubl/.claude/hooks/ferry.py flush",
+            "timeout": 30
           }
         ]
       }
@@ -35,12 +45,19 @@
           {
             "type": "command",
             "command": "C:/Users/doubl/anaconda3/python.exe C:/Users/doubl/.claude/hooks/prisma-stop-check.py",
-            "timeout": 10000
-          },
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "*",
+        "hooks": [
           {
             "type": "command",
-            "command": "C:/Users/doubl/anaconda3/python.exe C:/Users/doubl/.claude/hooks/session-archive.py",
-            "timeout": 15000
+            "command": "C:/Users/doubl/anaconda3/python.exe C:/Users/doubl/.claude/hooks/ferry.py archive",
+            "timeout": 15
           }
         ]
       }
@@ -52,7 +69,7 @@
           {
             "type": "command",
             "command": "C:/Users/doubl/anaconda3/python.exe C:/Users/doubl/.claude/hooks/guard-destructive.py",
-            "timeout": 5000
+            "timeout": 5
           }
         ]
       }

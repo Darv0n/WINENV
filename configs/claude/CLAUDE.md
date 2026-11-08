@@ -83,6 +83,15 @@ Do NOT paraphrase or restate them here — the rules file is the single source o
 - When the user reframes — extract the principle before continuing
 - When confidence is LOW — present options, don't choose
 
+### Session Continuity
+Compaction keeps a summary; files keep everything. `ferry` (WINENV hooks) carries each session across.
+- Write-through: a requirement, literal wording, decision or open question goes into its durable home
+  (project doc, the project's open-loops table, memory) in the same turn it arrives.
+- Questions that need the user's decision go through AskUserQuestion or the open-loops table, never
+  only inside a long reply.
+- After a compaction, read ferry's landing note and the verbatim record it points to before acting on
+  the summary's paraphrase.
+
 ## Memory
 
 Minimal facts file: `C:\Users\doubl\.claude\projects\C--Users-doubl\memory\MEMORY.md`

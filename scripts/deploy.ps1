@@ -168,6 +168,7 @@ $claudeDir = Join-Path $env:USERPROFILE '.claude'
 Deploy-Symlink "claude\settings.json" (Join-Path $claudeDir 'settings.json')
 Deploy-Symlink "claude\CLAUDE.md" (Join-Path $claudeDir 'CLAUDE.md')
 Deploy-Symlink "claude\hooks\guard-destructive-bash.sh" (Join-Path $claudeDir 'hooks\guard-destructive-bash.sh')
+Deploy-Symlink "claude\hooks\ferry.py" (Join-Path $claudeDir 'hooks\ferry.py')
 Deploy-Symlink "claude\rules\principles.md" (Join-Path $claudeDir 'rules\principles.md')
 Deploy-Symlink "claude\statusline.py" (Join-Path $claudeDir 'statusline.py')
 
