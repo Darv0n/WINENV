@@ -21,8 +21,8 @@ def get_git_info():
         ).stdout.strip()
         if not branch:
             return None, False
-        dirty = bool(subprocess.run(
-            ["git", "status", "--porcelain"],
+        dirty = bool(subprocess.run(  # read-only: never take the index lock a commit needs
+            ["git", "--no-optional-locks", "status", "--porcelain"],
             capture_output=True, text=True, timeout=2
         ).stdout.strip())
         return branch, dirty
