@@ -254,15 +254,28 @@ def read_events(path):
                 yield {"when": when, "kind": "system", "text": f"{st}: {_clean(str(o.get('content')))}"}
 
 
-def _dedupe_owner(events):
-    """A mid-turn message can appear both inside a tool result and as a queued attachment."""
-    seen, out = set(), []
+def _minute(when):
+    """'11-09 02:09' (local, as _when writes it) as a datetime, for distances within one session."""
+    try:
+        return datetime.strptime(f"2000-{when}", "%Y-%m-%d %H:%M")
+    except (TypeError, ValueError):
+        return None
+
+
+def _dedupe_owner(events, window_s=600):
+    """A mid-turn message can appear both inside a tool result and as a queued attachment: the same words
+    within minutes are one message. Two turn records are two sends, and words sent again later are new
+    messages: keyed on the text alone, three repeated approvals ("Engage" twice, "Done") vanished from
+    the record (2026-11-09)."""
+    last, out = {}, []
     for e in events:
         if e["kind"] == "owner":
             key = re.sub(r"\s+", " ", e["text"])[:300]
-            if key in seen:
+            at, prev = _minute(e.get("when")), last.get(key)
+            if prev and not (prev[1] == "turn" and e.get("how") == "turn") and at and prev[0] \
+                    and abs((at - prev[0]).total_seconds()) <= window_s:
                 continue
-            seen.add(key)
+            last[key] = (at, e.get("how"))
         out.append(e)
     return out
 
@@ -437,7 +450,22 @@ def flush(inp):
 
 # --- land (SessionStart, source=compact) ------------------------------------------------------------
 
-def _ledger_loops(repos, budget=2000):
+def _loops_table(body, src):
+    """The table and the lines that introduce it. The answers and decisions below it stay in the file:
+    carried whole, they spent the landing's budget and were cut mid-sentence (2026-11-09)."""
+    start = next((i for i, line in enumerate(body) if line.lstrip().startswith("|")), None)
+    if start is None:
+        return body
+    end = start
+    while end < len(body) and body[end].lstrip().startswith("|"):
+        end += 1
+    keep = body[:end]
+    if any(line.strip() for line in body[end:]):
+        keep.append(f"(Answers and decisions below the table stay in {src}.)")
+    return keep
+
+
+def _ledger_loops(repos, budget=3000):
     out = []
     for r in repos:
         for name in ("docs/LEDGER.md", "LEDGER.md"):
@@ -454,7 +482,7 @@ def _ledger_loops(repos, budget=2000):
                         if h and len(h.group(1)) <= level:
                             break
                         body.append(nxt)
-                    out.append(f"From {f}:\n" + "\n".join(body).strip())
+                    out.append(f"From {f}:\n" + "\n".join(_loops_table(body, f)).strip())
                     break
     return _cut("\n\n".join(out), budget)
 
@@ -572,10 +600,12 @@ def land(inp):
     paths = list(dict.fromkeys(s["edited"])) + ([s["cwd"]] if s["cwd"] else [])
     facts = repo_facts(paths)
     loops = _ledger_loops([f["repo"] for f in facts])
-    if loops:
-        parts.append("Open loops on record:\n" + loops)
-    if facts:
-        parts.append("Repositories touched this session:\n" + _repo_lines(facts))
+    repos = ("Repositories touched this session:\n" + _repo_lines(facts)) if facts else ""
+    if loops:  # the loops take the room that is left, so the cap never cuts the repositories' state
+        room = CAP - len("\n\n".join(parts)) - len(repos) - 60
+        parts.append("Open loops on record:\n" + _cut(loops, max(room, 600)))
+    if repos:
+        parts.append(repos)
     context = _cut("\n\n".join(parts), CAP)
     drift = ""
     if s["user_records"] and not s["owner"]:
@@ -807,6 +837,8 @@ def selftest(transcript=None):
         check("land: JSON with additionalContext", isinstance(ctx, str) and ctx.startswith("ferry:"),
               f"{len(ctx)} chars, {time.time() - t0:.2f}s")
         check("land: under the 10,000-char cap", len(ctx) < 10_000)
+        check("land: the repositories' state survives the cap",
+              "Repositories touched this session" in ctx or not s["edited"])
         check("land: heartbeat for the owner", "ferry: landed" in res.get("systemMessage", ""))
         check("land: wrote owner.md", (STORE / "selftest" / "owner.md").exists())
         check("land: silent on startup and in subagents",
@@ -825,6 +857,22 @@ def selftest(transcript=None):
               and "ghp_" not in cleaned, cleaned)
         prose = "the existing ask-before-driving-the-lab rule; tasks-for-the-owner-are-written-down"
         check("scrub: leaves prose alone", scrub(prose) == prose, scrub(prose))
+        ev = [{"kind": "owner", "how": "turn", "text": "Engage", "when": "11-08 18:00"},
+              {"kind": "owner", "how": "turn", "text": "Engage", "when": "11-09 02:09"},
+              {"kind": "owner", "how": "turn", "text": "Done", "when": "11-09 02:12"},
+              {"kind": "owner", "how": "turn", "text": "Done", "when": "11-09 02:14"},
+              {"kind": "owner", "how": "mid-turn", "text": "Wait", "when": "11-09 02:10"},
+              {"kind": "owner", "how": "mid-turn", "text": "Wait", "when": "11-09 02:11"}]
+        kept = [f"{e['when']} {e['text']}" for e in _dedupe_owner(ev)]
+        check("parse: words sent again are kept; one message seen twice is one", len(kept) == 5, "; ".join(kept))
+        repo = Path(tempfile.mkdtemp(prefix="ferry-loops-"))
+        (repo / "docs").mkdir()
+        (repo / "docs" / "LEDGER.md").write_text(
+            "# L\n\n## 0. Open loops\n\nEvery question lands here.\n\n| # | Question |\n|---|---|\n| 1 | first? |\n"
+            "| 2 | last row? |\n\nDecided long ago: " + "prose " * 600 + "\n\n## 1. Next\n", encoding="utf-8")
+        loops = _ledger_loops([str(repo)])
+        check("land: the open-loops table whole, the answers left in the file",
+              "| 2 | last row? |" in loops and "prose prose" not in loops and "stay in" in loops, f"{len(loops)} chars")
         hooks = _settings_hooks()
         missing = [h for h in hooks if not h[3]]
         check("settings: every hook script exists", not missing, "; ".join(f"{e}:{p}" for e, _, p, _, _ in missing))
