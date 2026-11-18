@@ -32,7 +32,10 @@ Report the size of each sweep.
 - what reaches a client: no weights, scores, private reasons or birth data;
 - old saved records, and old clients reading new fields.
 
-**Read the words as code.** Commit messages, PR drafts, docs and comments make claims. Check each one. A false sentence that a reviewer would trust is a finding.
+**Read the words as code.**
+- Run `git log --format=%B <base>..<head>` and check every sentence of every commit message on the branch, one by one, against the code at that commit. Then do the same for the PR draft, the docs and the comments the change touches.
+- A claimed fix the code does not make, a count that is wrong, or a consequence left unsaid ("also holds X", "also stores Y") is a finding. A false sentence a reviewer would trust is as serious as the bug it hides.
+- Look for side effects the words deny: a read that writes, a cache that stores, a log that names a person.
 
 **Cross the lane line.**
 - For every new or changed field, read its consumer (the app's parser, the other server surface) and confirm it accepts the field and survives its absence.
