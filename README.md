@@ -161,6 +161,8 @@ Ten principles load into every Claude session via `rules/principles.md`:
 9. **Single Source of Truth** — Every artifact exists in exactly one canonical location
 10. **Progressive Disclosure** — Load only what's needed for the current phase
 
+Standing agents in `configs/claude/agents/` carry each role's competence between tasks: `scholar` (sources, fetched and weighed), `writer` (on Fable: calculations into prose a reader hears), `reader-critic` (reads output as its reader will), `lane-builder` and `lane-critic` (a branch bound for someone else's repository).
+
 Beside them, `rules/lead-review.md` gives the session's lead model a short review to run at each milestone (before a release, when a critic reports, when a phase ends): the whole, disciplines briefed as personae and joined in one hand, the fresh eye, claims said as measured, sign-offs with their reasoning, spend (a better brief, then more effort, then a stronger model; effort starts at medium), errors named, and a lean harness.
 
 </details>
