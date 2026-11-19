@@ -1,8 +1,9 @@
 {
+  "cleanupPeriodDays": 365,
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
-  "model": "fable[1m]",
+  "model": "fable",
   "hooks": {
     "SessionStart": [
       {
@@ -89,11 +90,15 @@
     "coderabbit@claude-plugins-official": true,
     "sentry@claude-plugins-official": true
   },
-  "effortLevel": "high",
+  "effortLevel": "medium",
+  "modelSettings": {
+    "claude-fable-5-2": {
+      "effortLevel": "medium"
+    }
+  },
   "autoUpdatesChannel": "latest",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark-daltonized",
   "remoteControlAtStartup": false,
-  "agentPushNotifEnabled": true,
-  "cleanupPeriodDays": 365
+  "agentPushNotifEnabled": true
 }

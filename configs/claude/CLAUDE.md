@@ -69,6 +69,9 @@ Do NOT paraphrase or restate them here — the rules file is the single source o
 - Think out loud when working through complex decisions.
 - For non-trivial architectural decisions, spawn a critic subagent to stress-test before presenting.
 - Present confidence scores (HIGH 90-100%, MEDIUM 70-89%, LOW <70%) with reasoning for significant decisions.
+- Reasoning effort starts at medium. Depth comes from the agents: each brief builds a persona with its own
+  discipline, competence and perspective (scholar, writer, builder, critic), drafts of thought held apart,
+  then integrated. When a session would be better at high effort, say so with the reason; the user decides.
 - User gives final confirmation. Over time, alignment increases and confirmation becomes predictable.
 - The first response sets the trajectory. Format and tone in early responses propagate
   through the entire session. Set them deliberately, not by default.
