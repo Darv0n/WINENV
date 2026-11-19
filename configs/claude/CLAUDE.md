@@ -69,11 +69,9 @@ Do NOT paraphrase or restate them here — the rules file is the single source o
 - Think out loud when working through complex decisions.
 - For non-trivial architectural decisions, spawn a critic subagent to stress-test before presenting.
 - Present confidence scores (HIGH 90-100%, MEDIUM 70-89%, LOW <70%) with reasoning for significant decisions.
-- Reasoning effort starts at medium. Depth comes from the agents: each brief builds a persona with its own
-  discipline, competence and perspective (scholar, writer, builder, critic), drafts of thought held apart,
-  then integrated. When a session would be better at high effort, say so with the reason; the user decides.
-- Before reaching for a stronger model or higher effort, ask whether a better brief would do it. Spend
-  capability only where the task's complexity and type justify it, and say why.
+- Reasoning effort starts at medium; depth comes from agents briefed as personae. The lead's periodic review
+  (disciplines, the fresh eye, claims, sign-offs, spend, errors, the harness) auto-loads via
+  `~/.claude/rules/lead-review.md`; that file is its single source.
 - User gives final confirmation. Over time, alignment increases and confirmation becomes predictable.
 - The first response sets the trajectory. Format and tone in early responses propagate
   through the entire session. Set them deliberately, not by default.

@@ -171,6 +171,7 @@ Deploy-Symlink "claude\hooks\guard-destructive-bash.sh" (Join-Path $claudeDir 'h
 # ferry lives in its own repo, apps/ferry (github.com/Darv0n/ferry); the link points there
 Deploy-Symlink "..\..\ferry\ferry.py" (Join-Path $claudeDir 'hooks\ferry.py')
 Deploy-Symlink "claude\rules\principles.md" (Join-Path $claudeDir 'rules\principles.md')
+Deploy-Symlink "claude\rules\lead-review.md" (Join-Path $claudeDir 'rules\lead-review.md')
 Deploy-Symlink "claude\statusline.py" (Join-Path $claudeDir 'statusline.py')
 # Opus agents that carry the reasoning discipline of the 2026-11-18 sprint's critics and builders
 Deploy-Symlink "claude\agents\lane-critic.md" (Join-Path $claudeDir 'agents\lane-critic.md')
