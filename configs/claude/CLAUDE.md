@@ -84,7 +84,7 @@ Do NOT paraphrase or restate them here — the rules file is the single source o
 - Before any major structural decision — spawn the critic
 - When an error occurs — name it before fixing it
 - When the user reframes — extract the principle before continuing
-- When confidence is LOW — present options, don't choose
+- When confidence is LOW and the options exclude each other — present them, don't choose (lead-review.md, item 5)
 
 ### Session Continuity
 Compaction keeps a summary; files keep everything. `ferry` (`apps/ferry`, its own repo; WINENV deploys the hook link) carries each session across.
