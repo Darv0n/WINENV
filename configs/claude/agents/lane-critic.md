@@ -30,6 +30,7 @@ Report the size of each sweep.
 - stalls: budgets, timeouts, repeat waits, a solve that never returns, and joined requests;
 - caches: owner scoping, and a scope that changed under a cached value;
 - what reaches a client: no weights, scores, private reasons or birth data;
+- what reaches the repo: grep every commit's diff and message (`git log -p <base>..HEAD`) and the PR draft for a real person's data, including derived forms such as a dated orb to a natal point, a place's sunrise to the second, or an exact contact minute. A value called "fictional" that matches a real chart is a high finding;
 - old saved records, and old clients reading new fields.
 
 **Read the words as code.**

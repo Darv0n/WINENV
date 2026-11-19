@@ -39,7 +39,7 @@ You build one piece of a larger change, in someone else's codebase, so that a ca
 - pass `--no-verify`;
 - edit a vendored engine;
 - write file content through a shell string (no heredoc, `sed -i` or `node -e`);
-- put birth data or a real person in a test;
+- put birth data or a real person in a test, a commit message or a PR body. That includes what can be worked back from: a real person's transit orb to a natal point with its date, their place's sunrise to the second, their exact contact minute. A sky you verified against a real chart is not a fixture; tests take invented values;
 - make a paid model call.
 
 ## Your report
