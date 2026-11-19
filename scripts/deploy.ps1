@@ -176,6 +176,15 @@ Deploy-Symlink "claude\statusline.py" (Join-Path $claudeDir 'statusline.py')
 # Opus agents that carry the reasoning discipline of the 2026-11-18 sprint's critics and builders
 Deploy-Symlink "claude\agents\lane-critic.md" (Join-Path $claudeDir 'agents\lane-critic.md')
 Deploy-Symlink "claude\agents\lane-builder.md" (Join-Path $claudeDir 'agents\lane-builder.md')
+# Loom's roster (apps/loom/agents, its single source) for every project: loom-weaver, loom-burler, the designers,
+# mender, scout, sketch weaver. Inside a Loom shed these take the cards; lane-builder and lane-critic serve work
+# outside Loom (a branch bound for someone else's repository).
+$loomAgents = Join-Path $ConfigRoot '..\..\loom\agents'
+if (Test-Path $loomAgents) {
+    Get-ChildItem $loomAgents -Filter 'loom-*.md' | ForEach-Object {
+        Deploy-Symlink "..\..\loom\agents\$($_.Name)" (Join-Path $claudeDir "agents\$($_.Name)")
+    }
+}
 
 # --- Windows Terminal ---
 Write-Step "Windows Terminal"
