@@ -72,6 +72,8 @@ Do NOT paraphrase or restate them here — the rules file is the single source o
 - Reasoning effort starts at medium. Depth comes from the agents: each brief builds a persona with its own
   discipline, competence and perspective (scholar, writer, builder, critic), drafts of thought held apart,
   then integrated. When a session would be better at high effort, say so with the reason; the user decides.
+- Before reaching for a stronger model or higher effort, ask whether a better brief would do it. Spend
+  capability only where the task's complexity and type justify it, and say why.
 - User gives final confirmation. Over time, alignment increases and confirmation becomes predictable.
 - The first response sets the trajectory. Format and tone in early responses propagate
   through the entire session. Set them deliberately, not by default.
